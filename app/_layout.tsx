@@ -1,29 +1,46 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import React, { useEffect, useState } from "react";
+import "react-native-reanimated";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import SplashScreen from "../app/splashScreen"; // adjust path if needed
+import Banner from "../components/Banner";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    if (loaded) {
+      const timer = setTimeout(() => {
+        setShowSplash(false);
+      }, 3000); // 3 sec
+
+      return () => clearTimeout(timer);
+    }
+  }, [loaded]);
+
   if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
+    return (
+      <SafeAreaProvider>
+        <Banner />
+      </SafeAreaProvider>
+    );
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      {showSplash ? (
+        <SplashScreen />
+      ) : (
+        <Stack screenOptions={{ headerShown: false }}>
+          {/* index is your main entry */}
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+        </Stack>
+      )}
+    </SafeAreaProvider>
   );
 }
