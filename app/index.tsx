@@ -4,6 +4,7 @@ import TwoItemScroller from "@/components/TwoItemScroller"; // Import the new co
 import { cardSliderData } from "@/data/CardSliderData";
 import { ImageSlider } from "@/data/SliderData";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import React from "react";
 import {
   Dimensions,
@@ -55,10 +56,20 @@ const Page = () => {
           {/* Right side (login/signup) */}
           <View style={styles.authButtons}>
             <TouchableOpacity style={styles.loginBtn}>
-              <Text style={styles.loginText}>Log in</Text>
+              <Text
+                style={styles.loginText}
+                onPress={() => router.push("/login")}
+              >
+                Log in
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.signUpBtn}>
-              <Text style={styles.signUpText}>Sign Up</Text>
+              <Text
+                style={styles.signUpText}
+                onPress={() => router.push("/signup")}
+              >
+                Sign Up
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -79,7 +90,7 @@ const Page = () => {
             </View>
 
             {/* Popular PGs Section */}
-            <View style={styles.sectionContainer}>
+            <View style={[styles.sectionContainer, { marginTop: 10 }]}>
               <Text style={styles.sectionTitle}>Popular PGs</Text>
               <View
                 style={{
@@ -95,7 +106,7 @@ const Page = () => {
             </View>
 
             {/* Why Choose Us Section - New Two Item Scroller */}
-            <View style={styles.sectionContainer}>
+            <View style={[styles.sectionContainer, { marginTop: 10 }]}>
               <TwoItemScroller />
             </View>
           </ScrollView>
