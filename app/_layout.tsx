@@ -5,14 +5,15 @@ import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SplashScreen from "../app/splashScreen"; // adjust path if needed
 import Banner from "../components/Banner";
+import { AuthProvider, useAuth } from "../context/AuthContext";
 
-export default function RootLayout() {
+function MainLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   const [showSplash, setShowSplash] = useState(true);
-
+  const { isLoggedIn } = useAuth();
   useEffect(() => {
     if (loaded) {
       const timer = setTimeout(() => {
@@ -35,15 +36,28 @@ export default function RootLayout() {
     <SafeAreaProvider>
       {showSplash ? (
         <SplashScreen />
-      ) : (
+      ) : isLoggedIn ? (
+        // Logged in → Tabs
         <Stack screenOptions={{ headerShown: false }}>
-          {/* index is your main entry */}
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="signup" options={{ headerShown: false }} />
-          <Stack.Screen name="otp" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      ) : (
+        // Not logged in → Auth stack
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="login" />
+          <Stack.Screen name="signup" />
+          <Stack.Screen name="otp" />
         </Stack>
       )}
     </SafeAreaProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <MainLayout />
+    </AuthProvider>
   );
 }

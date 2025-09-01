@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
   Dimensions,
   Image,
@@ -10,11 +10,25 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useAuth } from "../context/AuthContext";
 
 const { width, height } = Dimensions.get("screen");
 
 const LoginPage = () => {
   const router = useRouter();
+  const { login } = useAuth(); // ✅ use context
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    // TODO: replace with real API validation
+    // if (email && password) {
+    login(); // update global state
+    router.replace("(tabs)/home"); // ✅ go to Home with tab bar
+    // } else {
+    //   alert("Enter email & password");
+    // }
+  };
 
   return (
     <ImageBackground
@@ -51,6 +65,8 @@ const LoginPage = () => {
           <TextInput
             placeholder="Email Address"
             placeholderTextColor="#888"
+            value={email}
+            onChangeText={setEmail}
             style={styles.input}
           />
         </View>
@@ -65,6 +81,8 @@ const LoginPage = () => {
             placeholder="Password"
             placeholderTextColor="#888"
             secureTextEntry
+            value={password}
+            onChangeText={setPassword}
             style={styles.input}
           />
         </View>
@@ -75,7 +93,7 @@ const LoginPage = () => {
         </TouchableOpacity>
 
         {/* Login Button */}
-        <TouchableOpacity style={styles.loginBtn}>
+        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
           <Text style={styles.loginText}>Log In</Text>
         </TouchableOpacity>
 
